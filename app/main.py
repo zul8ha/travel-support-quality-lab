@@ -11,15 +11,19 @@ from app.models import (
     CaseReason,
     Refund,
     RefundCreate,
+    Suggestion,
+    SuggestionRequest,
     SupportCase,
     SupportCaseCreate,
     SuggestedAction,
 )
 from app.services.refunds import RefundPolicy
+from app.services.suggestions import PolicySuggestionEngine
 
 
 app = FastAPI(title="Travel Support Quality Lab", version="0.1.0")
 policy = RefundPolicy()
+suggestion_engine = PolicySuggestionEngine(policy)
 
 
 class DomainError(Exception):
@@ -163,3 +167,9 @@ def resolve_case(case_id: str, action: SuggestedAction):
     return case
 
 
+
+
+@app.post("/assistant/suggest-action", response_model=Suggestion)
+def suggest_action(payload: SuggestionRequest):
+    booking = get_booking_or_404(payload.booking_id)
+    return suggestion_engine.suggest(booking, payload.reason, payload.requested_amount_eur)

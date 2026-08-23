@@ -69,3 +69,16 @@ class Refund(BaseModel):
     booking_id: str
     amount_eur: float
     status: str = "approved"
+
+
+class SuggestionRequest(BaseModel):
+    booking_id: str
+    reason: CaseReason
+    requested_amount_eur: float | None = Field(default=None, ge=0)
+
+
+class Suggestion(BaseModel):
+    booking_id: str
+    action: SuggestedAction
+    proposed_refund_eur: float = Field(ge=0)
+    rationale: str
