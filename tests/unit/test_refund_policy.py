@@ -1,5 +1,5 @@
 from app.data import BOOKINGS
-from app.models import CaseReason, SuggestedAction
+from app.models import Booking, BookingStatus, CaseReason, RateType, SuggestedAction
 from app.services.refunds import RefundPolicy
 
 
@@ -20,7 +20,14 @@ def test_service_problem_allows_thirty_percent_refund():
 
 
 def test_non_refundable_customer_request_is_rejected():
-    result = policy.evaluate(BOOKINGS["BKG-1001"], CaseReason.CUSTOMER_REQUEST)
+    booking = Booking(
+        id="BKG-NONREF",
+        customer_name="Test Customer",
+        amount_eur=120.0,
+        status=BookingStatus.CONFIRMED,
+        rate_type=RateType.NON_REFUNDABLE,
+    )
+    result = policy.evaluate(booking, CaseReason.CUSTOMER_REQUEST)
     assert result.eligible is False
     assert result.action == SuggestedAction.NO_REFUND
 
