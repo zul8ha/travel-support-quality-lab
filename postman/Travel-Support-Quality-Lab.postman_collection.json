@@ -1,0 +1,41 @@
+{
+  "info": {
+    "name": "Travel Support Quality Lab",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://127.0.0.1:8000"}
+  ],
+  "item": [
+    {
+      "name": "Get cancelled booking",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/bookings/BKG-1001",
+        "header": [{"key": "X-Correlation-ID", "value": "postman-demo-001"}]
+      }
+    },
+    {
+      "name": "Refund eligibility",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/refunds/eligibility?booking_id=BKG-1001&reason=property_cancelled"
+      }
+    },
+    {
+      "name": "Create idempotent refund",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/refunds",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "postman-refund-001"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"booking_id\": \"BKG-1001\",\n  \"reason\": \"property_cancelled\",\n  \"amount_eur\": 420\n}"
+        }
+      }
+    }
+  ]
+}
