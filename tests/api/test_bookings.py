@@ -23,3 +23,10 @@ def test_missing_booking_returns_structured_error_and_same_correlation_id(client
         }
     }
 
+
+def test_agent_console_is_served(client):
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert "Travel Support Quality Lab" in response.text
+    assert "Review case" in response.text
