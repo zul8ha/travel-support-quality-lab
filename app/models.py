@@ -82,3 +82,21 @@ class Suggestion(BaseModel):
     action: SuggestedAction
     proposed_refund_eur: float = Field(ge=0)
     rationale: str
+
+
+class LLMCandidate(BaseModel):
+    booking_id: str
+    action: SuggestedAction
+    proposed_refund_eur: float = Field(ge=0)
+    rationale: str
+    extra_fields: dict[str, str] = Field(default_factory=dict)
+
+
+class LLMEvaluationRequest(BaseModel):
+    scenario: SuggestionRequest
+    candidate: LLMCandidate
+
+
+class EvaluationResult(BaseModel):
+    passed: bool
+    violations: list[str]
