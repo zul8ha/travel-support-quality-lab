@@ -25,3 +25,7 @@ pythonpath = ["."]
 markers = [
   "e2e: browser end-to-end tests",
 ]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["tests*", "docs*", "postman*"]
